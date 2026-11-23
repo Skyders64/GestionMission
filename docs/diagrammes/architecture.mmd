@@ -1,0 +1,14 @@
+flowchart TB
+    U(["Utilisateur"])
+    IHM["<b>Couche présentation</b> — package gestionmission.IHM (Swing)<br/>Menu · JFrame : AjouterMission, ConsulterMission, ModifierMission, GestionAgents, GestionAffectations<br/>JDialog modales : ModifierMissionDialog, AgentDialog, AffectationDialog, ParticipationsDialog<br/>Utilitaires : MessageErreur (SQLException → message), ModeleTable (JTable)"]
+    DAO["<b>Couche accès aux données</b> — package gestionmission.DAO<br/>MissionDAO · AgentDAO · ParticipationDAO<br/>PreparedStatement, requêtes paramétrées, jointures (JOIN)"]
+    CX["<b>package gestionmission.Connexion</b><br/>ConnexionBDD.obtenirConnexion() — DriverManager"]
+    DB[("<b>MySQL</b><br/>base gestion_missions<br/>mission · agent · participation")]
+    MET["<b>Couche métier</b> — package gestionmission.Metier<br/>Mission · Statut · Priorite<br/>Agent · Participation"]
+
+    U -- "clics, saisies" --> IHM
+    IHM -- "appelle les DAO<br/>(reçoit les SQLException)" --> DAO
+    DAO -- "Connection" --> CX
+    CX -- "JDBC (mysql-connector-j)" --> DB
+    IHM -. "affiche / crée" .-> MET
+    DAO -. "construit à partir des ResultSet" .-> MET

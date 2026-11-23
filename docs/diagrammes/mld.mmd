@@ -1,0 +1,27 @@
+erDiagram
+    AGENT ||--o{ PARTICIPATION : "participe"
+    MISSION ||--o{ PARTICIPATION : "mobilise"
+    AGENT {
+        INT id_agent PK "AUTO_INCREMENT"
+        VARCHAR(50) pseudo UK "NOT NULL"
+        VARCHAR(80) nom "NOT NULL"
+        VARCHAR(50) specialite "NOT NULL"
+        INT niveau "NOT NULL"
+        BOOLEAN actif "NOT NULL DEFAULT TRUE"
+    }
+    PARTICIPATION {
+        INT id_agent PK, FK "-> agent ON DELETE CASCADE"
+        INT id_mission PK, FK "-> mission ON DELETE CASCADE"
+        VARCHAR(100) role "NOT NULL"
+        DATE date_affectation "NOT NULL"
+    }
+    MISSION {
+        INT id PK "AUTO_INCREMENT"
+        VARCHAR(100) titre "NOT NULL"
+        VARCHAR(500) description "NOT NULL"
+        DATE date_debut "NOT NULL"
+        DATE date_fin "NOT NULL, >= date_debut"
+        ENUM statut "A_PREPARER, EN_COURS, TERMINEE, ANNULEE"
+        ENUM priorite "BASSE, NORMALE, HAUTE, CRITIQUE"
+        DECIMAL budget "(10,2) NOT NULL DEFAULT 0, >= 0"
+    }

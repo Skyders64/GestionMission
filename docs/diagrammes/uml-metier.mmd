@@ -1,0 +1,59 @@
+classDiagram
+    direction TB
+    class Mission {
+        -int id
+        -String titre
+        -String description
+        -LocalDate dateDebut
+        -LocalDate dateFin
+        -Statut statut
+        -Priorite priorite
+        -double budget
+        +Mission()
+        +Mission(titre, description, dateDebut, dateFin, statut, priorite, budget)
+        +getXxx() / setXxx()
+        +toString() String
+    }
+    class Statut {
+        <<enumeration>>
+        A_PREPARER
+        EN_COURS
+        TERMINEE
+        ANNULEE
+    }
+    class Priorite {
+        <<enumeration>>
+        BASSE
+        NORMALE
+        HAUTE
+        CRITIQUE
+    }
+    class Agent {
+        +int NIVEAU_MIN = 1$
+        +int NIVEAU_MAX = 5$
+        -int idAgent
+        -String pseudo
+        -String nom
+        -String specialite
+        -int niveau
+        -boolean actif
+        +Agent()
+        +Agent(pseudo, nom, specialite, niveau, actif)
+        +getXxx() / setXxx()
+        +isActif() boolean
+        +toString() String
+    }
+    class Participation {
+        -Agent agent
+        -Mission mission
+        -String role
+        -LocalDate dateAffectation
+        +Participation()
+        +Participation(agent, mission, role, dateAffectation)
+        +getXxx() / setXxx()
+        +toString() String
+    }
+    Mission --> "1" Statut : statut
+    Mission --> "1" Priorite : priorite
+    Agent "1" <-- "0..*" Participation : agent
+    Participation "0..*" --> "1" Mission : mission

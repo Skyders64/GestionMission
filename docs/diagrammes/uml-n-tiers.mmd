@@ -1,0 +1,117 @@
+classDiagram
+    direction TB
+    namespace IHM {
+        class Menu {
+            <<JFrame>>
+            -ouvrir(JFrame)
+        }
+        class AjouterMission {
+            <<JFrame>>
+        }
+        class ConsulterMission {
+            <<JFrame>>
+            -initTable()
+            -voirAgentsMissionSelectionnee()
+        }
+        class ModifierMission {
+            <<JFrame>>
+        }
+        class ModifierMissionDialog {
+            <<JDialog>>
+            +isModifie() boolean
+        }
+        class GestionAgents {
+            <<JFrame>>
+            -chargerAgents()
+            -ajouterAgent()
+            -modifierAgent()
+            -supprimerAgent()
+        }
+        class AgentDialog {
+            <<JDialog>>
+            -enregistrer()
+            +isEnregistre() boolean
+        }
+        class GestionAffectations {
+            <<JFrame>>
+            -chargerAffectations()
+            -affecterAgent()
+            -retirerAgent()
+        }
+        class AffectationDialog {
+            <<JDialog>>
+            -chargerAgentsDisponibles()
+            -enregistrer()
+            +isEnregistre() boolean
+        }
+        class ParticipationsDialog {
+            <<JDialog>>
+        }
+        class MessageErreur {
+            +afficher(Component, String, SQLException)$
+            +traduire(SQLException)$ String
+        }
+        class ModeleTable {
+            <<DefaultTableModel>>
+            +appliquer(JTable, ModeleTable)$
+        }
+    }
+    namespace DAO {
+        class MissionDAO {
+            +lister() ArrayList~Mission~
+            +trouverParId(int) Mission
+            +ajouter(Mission) int
+            +modifier(Mission) boolean
+            +supprimer(Mission) boolean
+        }
+        class AgentDAO {
+            +lister() ArrayList~Agent~
+            +listerActifs() ArrayList~Agent~
+            +listerDisponiblesPourMission(int) ArrayList~Agent~
+            +trouverParId(int) Agent
+            +ajouter(Agent) int
+            +modifier(Agent) boolean
+            +supprimer(Agent) boolean
+        }
+        class ParticipationDAO {
+            +listerToutes() ArrayList~Participation~
+            +listerParMission(int) ArrayList~Participation~
+            +listerParAgent(int) ArrayList~Participation~
+            +compterAgentsParMission() Map
+            +existe(int, int) boolean
+            +ajouter(Participation) int
+            +modifier(Participation) boolean
+            +supprimer(Participation) boolean
+        }
+    }
+    namespace Connexion {
+        class ConnexionBDD {
+            <<final>>
+            +obtenirConnexion()$ Connection
+        }
+    }
+    Menu ..> AjouterMission
+    Menu ..> ConsulterMission
+    Menu ..> ModifierMission
+    Menu ..> GestionAgents
+    Menu ..> GestionAffectations
+    ConsulterMission ..> ModifierMissionDialog
+    ConsulterMission ..> ParticipationsDialog
+    GestionAgents ..> AgentDialog
+    GestionAgents ..> ParticipationsDialog
+    GestionAffectations ..> AffectationDialog
+    AjouterMission ..> MissionDAO
+    ConsulterMission ..> MissionDAO
+    ModifierMission ..> MissionDAO
+    ModifierMissionDialog ..> MissionDAO
+    GestionAgents ..> AgentDAO
+    AgentDialog ..> AgentDAO
+    AffectationDialog ..> AgentDAO
+    AffectationDialog ..> ParticipationDAO
+    GestionAffectations ..> ParticipationDAO
+    ParticipationsDialog ..> ParticipationDAO
+    ParticipationDAO ..> AgentDAO : construireAgent()
+    ParticipationDAO ..> MissionDAO : construireMission()
+    MissionDAO ..> ConnexionBDD
+    AgentDAO ..> ConnexionBDD
+    ParticipationDAO ..> ConnexionBDD

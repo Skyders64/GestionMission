@@ -1,0 +1,28 @@
+sequenceDiagram
+    actor U as Utilisateur
+    participant GA as GestionAffectations (JFrame)
+    participant AD as AffectationDialog (JDialog)
+    participant ADAO as AgentDAO
+    participant PDAO as ParticipationDAO
+    participant DB as MySQL
+    U->>GA: clic « Affecter un agent »
+    GA->>AD: new AffectationDialog(this, mission) puis setVisible(true) — modale, bloquant
+    AD->>ADAO: listerDisponiblesPourMission(idMission)
+    ADAO->>DB: SELECT a.* FROM agent a LEFT JOIN participation p ... WHERE p.id_agent IS NULL
+    DB-->>ADAO: ResultSet
+    ADAO-->>AD: liste des agents actifs non affectés
+    U->>AD: choisit l'agent, le rôle, la date puis « Enregistrer »
+    AD->>AD: validation de la saisie (rôle, format et cohérence de la date)
+    AD->>PDAO: ajouter(participation)
+    PDAO->>DB: INSERT INTO participation VALUES (?, ?, ?, ?)
+    alt insertion réussie
+        DB-->>PDAO: 1 ligne insérée
+        PDAO-->>AD: 1
+        AD-->>GA: fermeture, isEnregistre() = true
+        GA->>PDAO: listerToutes() / listerParMission() — INNER JOIN
+        GA-->>U: table rafraîchie + message de confirmation
+    else clé primaire déjà présente (erreur MySQL 1062)
+        DB-->>PDAO: erreur
+        PDAO-->>AD: SQLIntegrityConstraintViolationException
+        AD-->>U: message « déjà affecté », la fenêtre reste ouverte
+    end

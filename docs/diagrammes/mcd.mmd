@@ -1,0 +1,27 @@
+classDiagram
+    direction LR
+    class AGENT {
+        id_agent$
+        pseudo
+        nom
+        specialite
+        niveau
+        actif
+    }
+    class PARTICIPER {
+        <<association>>
+        role
+        date_affectation
+    }
+    class MISSION {
+        id$
+        titre
+        description
+        date_debut
+        date_fin
+        statut
+        priorite
+        budget
+    }
+    AGENT "0,n" -- PARTICIPER
+    PARTICIPER -- "0,n" MISSION
